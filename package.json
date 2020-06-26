@@ -1,6 +1,6 @@
 {
   "name": "mix-white-sass-icons",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Automatic fontello builds for use with Laravel Mix and white-sass",
   "main": "src/index.js",
   "scripts": {
