@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/whitecube/mix-white-sass-icons#readme",
   "dependencies": {
-    "fontellizr": "git+https://git@github.com/voidgraphics/fontellizr.git"
+    "fontellizr": "voidgraphics/fontellizr#patch-1"
   },
   "peerDependencies": {
     "laravel-mix": "*"
