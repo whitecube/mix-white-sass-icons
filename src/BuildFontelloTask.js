@@ -40,7 +40,7 @@ class BuildFontelloTask extends Task {
 
         let elapsed =  Date.now() - this.lastBuild;
 
-        return elapsed < 1000;
+        return elapsed < 10000;
     }
 
     makeDirectories(destination) {
