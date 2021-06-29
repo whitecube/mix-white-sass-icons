@@ -7,7 +7,7 @@ class LaravelMixFontello {
     }
 
     dependencies() {
-        return ['fontellizr'];
+        return ['fontellizr', 'svgo', 'oslllo-svg-fixer'];
     }
 
     register(source, destination, config = 'resources/sass/config/_icons.scss') {

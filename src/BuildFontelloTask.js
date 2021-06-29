@@ -1,6 +1,8 @@
-const fontello = require('fontellizr');
 const fs = require('fs');
 const os = require('os');
+const { optimize } = require('svgo');
+const fontello = require('fontellizr');
+const SVGFixer = require('oslllo-svg-fixer');
 const Task = require('laravel-mix/src/tasks/Task');
 const FileCollection = require('laravel-mix/src/FileCollection');
 
@@ -12,17 +14,47 @@ class BuildFontelloTask extends Task {
         this.files = new FileCollection(copy.source);
     }
 
+    getOptimizedPath() {
+        return this.data.source + '/_optimized';
+    }
+
     run() {
         if (!this.data.source || !this.data.destination || this.isLooping()) {
             return;
         }
 
-        this.makeDirectories(this.data.destination);
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.makeDirectories(this.data.destination);
 
-        this.lastBuild = Date.now();
+            this.lastBuild = Date.now();
 
+            SVGFixer(this.data.source, this.getOptimizedPath(), {
+                throwIfDestinationDoesNotExist: false
+            }).fix().then(() => {
+                this.optimizeSvgs();
+                this.buildFontello();
+            });
+        });
+    }
+
+    optimizeSvgs() {
+        const files = fs.readdirSync(this.getOptimizedPath());
+        const path = this.getOptimizedPath();
+
+        files.forEach(filename => {
+            const filepath = path + '/' + filename;
+            const contents = fs.readFileSync(filepath);
+            const optimized = optimize(contents.toString(), {
+                path: filepath,
+            });
+            fs.writeFileSync(filepath, optimized.data);
+        });
+    }
+
+    buildFontello() {
         fontello({
-            svgsSourceDir: this.data.source,
+            svgsSourceDir: this.getOptimizedPath(),
             fontsDestDir: this.data.destination,
             stylesDestDir: './tmp-fontello-css',
             fontelloConfig: {
@@ -32,6 +64,7 @@ class BuildFontelloTask extends Task {
         .then(() => {
             this.writeConfig(this.data.config);
             fs.rmdirSync('./tmp-fontello-css', {recursive: true});
+            this.resolve();
         });
     }
 
