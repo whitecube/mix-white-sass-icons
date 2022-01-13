@@ -26,7 +26,7 @@
   "homepage": "https://github.com/whitecube/mix-white-sass-icons#readme",
   "dependencies": {
     "fontellizr": "voidgraphics/fontellizr",
-    "oslllo-svg-fixer": "^1.3.2",
+    "oslllo-svg-fixer": "^2.0.0",
     "svgo": "^2.3.1"
   },
   "peerDependencies": {
